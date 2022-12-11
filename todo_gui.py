@@ -1,18 +1,29 @@
 import functions
 import PySimpleGUI as sg
 import time
+import os
 
+if not os.path.exists('todos.txt'):
+    with open('todos.txt', 'w') as file:
+        pass
+
+# Current system time
 clock = sg.Text('', key='clock')
+
 label = sg.Text('Type in a to-do')
 input_box = sg.InputText(tooltip='Enter a to-do: ', key='todo')
-add_button = sg.Button('Add')
-list_box = sg.Listbox(values=functions.get_todos(), key='todos',
-                      enable_events=True, size=[45, 10])
+
+# Buttons
+add_button = sg.Button('Add', key='add')
 edit_button = sg.Button('Edit')
-complete_button = sg.Button('Complete')
+complete_button = sg.Button('Complete', key='complete')
 exit_button = sg.Button('Exit')
 
-sg.theme('DarkTeal1')
+# List of all todos in the 'todos.txt' file
+list_box = sg.Listbox(values=functions.get_todos(), key='todos',
+                      enable_events=True, size=[45, 10])
+
+sg.theme('Black')
 
 window = sg.Window('My To-Do App',
                    layout=[[clock],
@@ -26,7 +37,7 @@ while True:
     window['clock'].update(value=time.strftime('%B %d %Y, %I:%M %p'))
 
     match event:
-        case 'Add':
+        case 'add':
             todos = functions.get_todos()
             new_todo = values['todo'] + '\n'
             todos.append(new_todo)
@@ -44,7 +55,7 @@ while True:
                 window['todos'].update(values=todos)
             except IndexError:
                 sg.popup('Please select an item first', font=('Helvetica', 14))
-        case 'Complete':
+        case 'complete':
             try:
                 todo_to_complete = values['todos'][0]
                 todos = functions.get_todos()
@@ -57,7 +68,10 @@ while True:
         case 'Exit':
             break
         case 'todos':
-            window['todo'].update(value=values['todos'][0])
+            try:
+                window['todo'].update(value=values['todos'][0])
+            except IndexError:
+                sg.popup('An empty to-do list! Add something to it', font=('Helvetica', 14))
         case sg.WIN_CLOSED:
             break
 
