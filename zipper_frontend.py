@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 from zipper_backend import extract_archive, compress_files
+import zipfile
 
 sg.theme('DarkGreen6')
 
@@ -41,16 +42,17 @@ window = sg.Window('Archive Extractor/Compressor',
 
 while True:
     event, values = window.read()
-    print(event, values)
 
     match event:
         case 'Extract':
             extract_path = values['toextract']
             dest_dir_e = values['folder_e']
-            extract_archive(extract_path, dest_dir_e)
-            window['output_e'].update(value='Extraction completed!')
-            window['input1_c'].update(value='')
-            window['input2_c'].update(value='')
+            try:
+                extract_archive(extract_path, dest_dir_e)
+                window['output_e'].update(value='Extraction completed!')
+                window['input2_c'].update(value='')
+                window['input1_c'].update(value='')
+            except zipfile.BadZipFile: sg.popup('Extension of archive to extract is not supported', font=('Helvetica', 14))
 
         case 'Compress':
             compress_path = values['tocompress'].split(';')
