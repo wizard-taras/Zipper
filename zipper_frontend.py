@@ -53,7 +53,6 @@ while True:
                 window['input2_c'].update(value='')
                 window['input1_c'].update(value='')
             except zipfile.BadZipFile: sg.popup('Extension of archive to extract is not supported', font=('Helvetica', 14))
-
         case 'Compress':
             compress_path = values['tocompress'].split(';')
             dest_dir_c = values['folder_c']
