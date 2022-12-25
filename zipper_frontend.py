@@ -16,7 +16,6 @@ choose_button2_c = sg.FolderBrowse('Choose', key='folder_c')
 
 compress_button = sg.Button('Compress')
 output_label_c = sg.Text(key='output_c')
-
 # EXTRACTOR
 label1_e = sg.Text('.zip Extractor')
 label2_e = sg.Text('Select archive:')
